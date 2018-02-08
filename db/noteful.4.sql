@@ -14,7 +14,7 @@ ALTER SEQUENCE folders_id_seq RESTART WITH 100;
 
 CREATE TABLE tags (
   id serial PRIMARY KEY,
-  name text NOT NULL
+  name text NOT NULL UNIQUE
 );
 
 CREATE TABLE notes (
