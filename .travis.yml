@@ -5,4 +5,4 @@ env:
 services:
   - postgresql
 before_script:
-  - psql -U postgres -c 'create database noteful-test;' 
+  - psql -c 'create database noteful-test;' -U postgres
