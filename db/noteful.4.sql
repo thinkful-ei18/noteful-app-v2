@@ -1,4 +1,4 @@
---`psql -U dev -f ./db/noteful.4.sql -d noteful-app`
+-- psql -U dev -f ./db/noteful.4.sql -d noteful-test
 -- SELECT CURRENT_DATE;
 
 DROP TABLE IF EXISTS notes_tags;

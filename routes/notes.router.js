@@ -45,19 +45,13 @@ router.get('/notes', (req, res, next) => {
       const hydrated = treeize.getData();
       res.json(hydrated);
     })
-    .catch(err => {
-      console.error(err);
-    });
+    .catch(next);
+    
 });
 
 /* ========== GET/READ SINGLE NOTES ========== */
 router.get('/notes/:id', (req, res, next) => {
   const noteId = req.params.id;
-
-  // 3 variations:
-  //   - Array Item `res.json(result[0]);`
-  //   - Array Destructuring `.then(([result]) => {`
-  //   - Use `.first()` instead of `.select()`
 
   knex.select('notes.id', 'title', 'content', 'folder_id',
     'folders.name as folder_name',
@@ -68,7 +62,7 @@ router.get('/notes/:id', (req, res, next) => {
     .leftJoin('tags', 'tags.id', 'notes_tags.tag_id')
     .where('notes.id', noteId)
     .then(result => {
-      if (result) {
+      if (result.length) {
         const treeize = new Treeize();
         treeize.grow(result);
         const hydrated = treeize.getData();
@@ -124,12 +118,10 @@ router.post('/notes', (req, res, next) => {
         const hydrated = treeize.getData();
         res.location(`${req.originalUrl}/${result.id}`).status(201).json(hydrated[0]);
       } else {
-        next(); // fall-through to 404 handler
+        next();
       }
     })
-    .catch(err => {
-      console.error(err);
-    });
+    .catch(next);
 });
 
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
@@ -174,18 +166,16 @@ router.put('/notes/:id', (req, res, next) => {
         .where('notes.id', noteId);
     })
     .then(result => {
-      if (result) {
+      if (result.length) {
         const treeize = new Treeize();
         treeize.grow(result);
         const hydrated = treeize.getData();
         res.json(hydrated[0]);
       } else {
-        next(); // fall-through to 404 handler
+        next();
       }
     })
-    .catch(err => {
-      console.error(err);
-    });
+    .catch(next);
 });
 
 /* ========== DELETE/REMOVE A SINGLE ITEM ========== */
@@ -197,7 +187,7 @@ router.delete('/notes/:id', (req, res, next) => {
       if (count) {
         res.status(204).end();
       } else {
-        next(); // fall-through to 404 handler
+        next();
       }
     })
     .catch(next);
