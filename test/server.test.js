@@ -138,25 +138,25 @@ describe('GET /v2/notes', function () {
   });
 
 
-  // it('should search by folder id', function () {
-  //   const dataPromise = knex.select()
-  //     .from('notes')
-  //     .where('folder_id', 103)
-  //     .orderBy('notes.id');
+  it('should search by folder id', function () {
+    const dataPromise = knex.select()
+      .from('notes')
+      .where('folder_id', 103)
+      .orderBy('notes.id');
 
-  //   const apiPromise = chai.request(app)
-  //     .get('/v2/notes?folderId=103');
+    const apiPromise = chai.request(app)
+      .get('/v2/notes?folderId=103');
 
-  //   return Promise.all([dataPromise, apiPromise])
-  //     .then(function ([data, res]) {        
-  //       expect(res).to.have.status(200);
-  //       expect(res).to.be.json;
-  //       expect(res.body).to.be.a('array');
-  //       expect(res.body).to.have.length(2);
-  //       expect(res.body[0]).to.be.an('object');
-  //       expect(res.body[0].id).to.equal(data[0].id);
-  //     });  
-  // });
+    return Promise.all([dataPromise, apiPromise])
+      .then(function ([data, res]) {        
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('array');
+        expect(res.body).to.have.length(2);
+        expect(res.body[0]).to.be.an('object');
+        expect(res.body[0].id).to.equal(data[0].id);
+      });  
+  });
 
 
   it('should return an empty array for an incorrect query', function () {
