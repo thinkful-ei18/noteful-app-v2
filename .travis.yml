@@ -6,7 +6,7 @@ services:
   - postgresql
 before_script:
   - sudo -u postgres createuser -s -p 5432 dev &>/dev/null
-  - sudo -u postgres createdb -O dev -p 5432 'noteful-test &>/dev/null
+  - sudo -u postgres createdb -O dev -p 5432 noteful-test &>/dev/null
   # - psql -U postgres -c 'CREATE DATABASE "noteful-test";'
   # - psql -U postgres  -c "CREATE ROLE dev WITH PASSWORD 'dev';" 
   - psql -U travis -f ./db/noteful.4.sql
