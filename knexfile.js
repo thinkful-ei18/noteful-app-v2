@@ -9,7 +9,7 @@ module.exports = {
   },
   test: {
     client: 'pg',
-    connection: process.env.TEST_DATABASE_URL || 'postgres://postgres:@localhost:5432/travis',
+    connection: process.env.TEST_DATABASE_URL || 'postgres://localhost:5432/noteful-test',
     pool: {min : 1 , max : 2}
   },
   production: {

@@ -6,8 +6,6 @@ const router = express.Router();
 const knex = require('../knex');
 const { UNIQUE_VIOLATION } = require('pg-error-constants');
 
-console.log('tags:', knex.client.connectionSettings.database);
-
 /* ========== GET/READ ALL TAGS ========== */
 router.get('/tags', (req, res, next) => {
   knex.select('id', 'name')

@@ -12,16 +12,6 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(chaiSpies);
 
-console.log('testing:', knex.client.connectionSettings);
-
-before('database check', function () {
-  return knex.select().from('notes')
-    .then(results => {
-      console.log(results);
-      
-    });
-});
-
 describe('Reality Check', () => {
 
   it('true should be true', () => {
@@ -41,7 +31,7 @@ describe('Environment', () => {
   });
 
   it('connection should be test database', () => {
-    expect(knex.client.connectionSettings.database).to.equal('travis');
+    expect(knex.client.connectionSettings.database).to.equal('noteful-test');
   });
 
 });

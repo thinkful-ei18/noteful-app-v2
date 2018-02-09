@@ -2,8 +2,6 @@
 
 const knex = require('../../knex');
 
-console.log('seed data:', knex.client.connectionSettings.database);
-
 function seedDataFolders() {
   
   const folders = require('./folders');
