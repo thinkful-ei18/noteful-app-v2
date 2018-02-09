@@ -25,8 +25,7 @@ afterEach(function () {
 });
 
 after(function () {
-  // destroy the connection
-  return knex.destroy();
+  return knex.destroy(); // destroy the connection
 });
 
 describe('Reality Check', () => {
@@ -90,13 +89,18 @@ describe('Basic Express setup', () => {
 describe('GET /v2/notes', function () {
 
   it('should return the default of 10 Notes ', function () {
-    return chai.request(app)
-      .get('/v2/notes')
+    let count;
+    return knex.count()
+      .from('notes')
+      .then(([result]) => {
+        count = Number(result.count);
+        return chai.request(app).get('/v2/notes');
+      })
       .then(function (res) {
         expect(res).to.have.status(200);
         expect(res).to.be.json;
         expect(res.body).to.be.a('array');
-        expect(res.body).to.have.length(10);
+        expect(res.body).to.have.length(count);
       });
   });
 
@@ -115,18 +119,45 @@ describe('GET /v2/notes', function () {
       });
   });
 
-  it('should return correct search results for a valid query', function () {
-    return chai.request(app)
-      .get('/v2/notes?searchTerm=5%20life')
-      .then(function (res) {
+  
+  it('should return correct search results for a searchTerm query', function () {
+    let res;
+    return chai.request(app).get('/v2/notes?searchTerm=gaga')
+      .then(function (_res) {
+        res = _res;
         expect(res).to.have.status(200);
         expect(res).to.be.json;
         expect(res.body).to.be.a('array');
         expect(res.body).to.have.length(1);
         expect(res.body[0]).to.be.an('object');
-        expect(res.body[0].id).to.equal(1000);
+        return knex.select().from('notes').where('title', 'like', '%gaga%');
+      })
+      .then(data => {
+        expect(res.body[0].id).to.equal(data[0].id);
       });
   });
+
+
+  // it('should search by folder id', function () {
+  //   const dataPromise = knex.select()
+  //     .from('notes')
+  //     .where('folder_id', 103)
+  //     .orderBy('notes.id');
+
+  //   const apiPromise = chai.request(app)
+  //     .get('/v2/notes?folderId=103');
+
+  //   return Promise.all([dataPromise, apiPromise])
+  //     .then(function ([data, res]) {        
+  //       expect(res).to.have.status(200);
+  //       expect(res).to.be.json;
+  //       expect(res.body).to.be.a('array');
+  //       expect(res.body).to.have.length(2);
+  //       expect(res.body[0]).to.be.an('object');
+  //       expect(res.body[0].id).to.equal(data[0].id);
+  //     });  
+  // });
+
 
   it('should return an empty array for an incorrect query', function () {
     return chai.request(app)
@@ -160,7 +191,7 @@ describe('GET /v2/notes/:id', function () {
     const spy = chai.spy();
     return chai.request(app)
       .get('/v2/notes/9999')
-      .then(spy)  
+      .then(spy)
       .then(() => {
         expect(spy).to.not.have.been.called();
       })
@@ -179,18 +210,22 @@ describe('POST /v2/notes', function () {
       'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
       'tags': []
     };
+    let body;
     return chai.request(app)
       .post('/v2/notes')
       .send(newItem)
       .then(function (res) {
+        body = res.body;
         expect(res).to.have.status(201);
-        expect(res).to.be.json;
-        expect(res.body).to.be.a('object');
-        expect(res.body).to.include.keys('id', 'title', 'content');
-
-        expect(res.body.title).to.equal(newItem.title);
-        expect(res.body.content).to.equal(newItem.content);
         expect(res).to.have.header('location');
+        expect(res).to.be.json;
+        expect(body).to.be.a('object');
+        expect(body).to.include.keys('id', 'title', 'content');
+        return knex.select().from('notes').where('id', body.id);
+      })
+      .then(([data]) => {
+        expect(body.title).to.equal(data.title);
+        expect(body.content).to.equal(data.content);
       });
   });
 

@@ -241,8 +241,6 @@ const noteful = (function () {
           store.folders = response;
           render();
         }).catch(err => {
-          console.log(err.responseJSON.message);
-          
           $('.js-error-message').text(err.responseJSON.message);
         });
     });
@@ -251,8 +249,6 @@ const noteful = (function () {
   function handleFolderDeleteClick() {
     $('.js-folders-list').on('click', '.js-folder-delete', event => {
       event.preventDefault();
-      console.log(6798);
-
       const folderId = getFolderIdFromElement(event.currentTarget);
 
       if (folderId === store.currentQuery.folderId) {

@@ -10,8 +10,8 @@
 	"main": "server.js",
 	"scripts": {
 		"start": "node server.js",
-		"test": "cross-env NODE_ENV=test mocha --exit --bail",
-		"cover" : "nodemon --exec nyc --reporter=lcov --reporter=text-summary npm test"
+		"test": "cross-env NODE_ENV=test mocha --exit",
+		"cover" : "nyc --reporter=lcov --reporter=text-summary npm test"
 	},
 	"dependencies": {
 		"express": "^4.16.2",

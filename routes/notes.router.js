@@ -11,7 +11,6 @@ router.get('/notes', (req, res, next) => {
   const searchTerm = req.query.searchTerm;
   const folderId = req.query.folderId;
   const tagId = req.query.tagId;
-
   knex.select('notes.id', 'title', 'content', 'folder_id',
     'folders.name as folder_name',
     'tags.id as tags:id', 'tags.name as tags:name')
@@ -77,7 +76,7 @@ router.get('/notes/:id', (req, res, next) => {
 
 /* ========== POST/CREATE ITEM ========== */
 router.post('/notes', (req, res, next) => {
-  const { title, content, folder_id, tags } = req.body;
+  const { title, content, folder_id, tags = [] } = req.body;
 
   /***** Never trust users. Validate input *****/
   if (!req.body.title) {
@@ -97,7 +96,8 @@ router.post('/notes', (req, res, next) => {
     .returning('id')
     .then(([id]) => {
       noteId = id;
-      const tagsInsert = tags.map(tagId => ({ note_id: noteId, tag_id: tagId }));
+      // if (!tags) return;
+      const tagsInsert = tags.map(tag=> ({ note_id: noteId, tag_id: tag }));
       return knex.insert(tagsInsert)
         .into('notes_tags');
     })
