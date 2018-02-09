@@ -14,6 +14,14 @@ chai.use(chaiSpies);
 
 console.log('testing:', knex.client.connectionSettings.database);
 
+before('database check', function () {
+  return knex.select().from('notes')
+    .then(results => {
+      console.log(results);
+      
+    });
+});
+
 describe('Reality Check', () => {
 
   it('true should be true', () => {
