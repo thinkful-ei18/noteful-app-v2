@@ -6,6 +6,8 @@ const knex = require('../knex');
 
 const router = express.Router();
 
+console.log('notes:', knex.client.connectionSettings.database);
+
 /* ========== GET/READ ALL NOTES ========== */
 router.get('/notes', (req, res, next) => {
   const searchTerm = req.query.searchTerm;

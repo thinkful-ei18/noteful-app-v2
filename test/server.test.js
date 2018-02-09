@@ -12,6 +12,7 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(chaiSpies);
 
+console.log('testing:', knex.client.connectionSettings.database);
 
 describe('Reality Check', () => {
 
