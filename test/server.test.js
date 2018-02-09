@@ -12,7 +12,7 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(chaiSpies);
 
-console.log('testing:', knex.client.connectionSettings.database);
+console.log('testing:', knex.client.connectionSettings);
 
 before('database check', function () {
   return knex.select().from('notes')
